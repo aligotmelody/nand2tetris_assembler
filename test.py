@@ -5,7 +5,7 @@ dic = {
     }
 
 
-new = {"dest": "55", "cmp": "23",}
+new = {"dest": "55", "cmp": "23", "jmp":"11"}
 
 dic.update(new)
 dest = dic["dest"]

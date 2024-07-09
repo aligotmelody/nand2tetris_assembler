@@ -32,6 +32,7 @@ def parse_source_code(source_code):
   while True:
     tok = lexer.token()
     if not tok:
+      
       break
     if tok.type == "LABEL":
       labels.append(tok.value[1:-1])  # Remove Parenthesis from label
