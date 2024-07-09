@@ -16,3 +16,6 @@ Cinst_dest_rest = (tok.value.split("="))
         #"jmp" : jmp ,
 “””
 have the c instruction broken down to the needed commands 
+
+first of all do the A instruction 
+second of all do the the most common c instruction [AD=D-1]
