@@ -98,4 +98,8 @@ AD=D-1
 labels, Ainstruction, Cinstruction = parse_source_code(source)
 print(labels)
 print(Ainstruction)
+<<<<<<< HEAD
 print(Cinstruction)"""
+=======
+print(Cinstruction)"""
+>>>>>>> 99f1f2a (update test)
