@@ -53,9 +53,9 @@ def parse_source_code(source_code):
     "jmp" : "" ,
   }
   N_Cinstruction = {
-        "dest": dest ,
-        "cmp" : cmp ,
-        "jmp" : jmp ,
+        "dest": "dest" ,
+        "cmp" : "cmp" ,
+        "jmp" : "jmp" ,
       }
   while True:
     tok = lexer.token()
@@ -69,18 +69,19 @@ def parse_source_code(source_code):
       Ainstruction.append(tok.value.strip("@"))
     elif tok.type == "Cinstruction":
       Cinst_dest_rest = (tok.value.split("="))
-      Cinstruction["dest"] = Cinst_dest_rest[0]
+      N_Cinstruction["dest"] = Cinst_dest_rest[0]
       print(Cinst_dest_rest)
-      Cinst_cm_jm = Cinst_dest_rest.split(";")
+
+      str_Cinst_dest_rest = str(Cinst_dest_rest)
+      Cinst_cm_jm = str_Cinst_dest_rest.split(";")
       dest = Cinst_dest_rest[0]
       cmp  = Cinst_cm_jm[0]
       jmp  = Cinst_cm_jm[1]
       
       Cinstruction.update(N_Cinstruction)
 
+  return  Cinstruction
 
-
-  return labels, Ainstruction, Cinstruction
 
 source = """
 //n=2
@@ -92,9 +93,9 @@ AD=D-1
 @ali
 """
 
-
+"""
 
 labels, Ainstruction, Cinstruction = parse_source_code(source)
 print(labels)
 print(Ainstruction)
-print(Cinstruction)
+print(Cinstruction)"""
