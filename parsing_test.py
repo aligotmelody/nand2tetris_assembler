@@ -11,12 +11,15 @@ tokens = (
 )
 
 t_LABEL = r'\([A-Za-z0-9]+\)'
-t_Variabels = r'[A-Za-z]+'
+t_Variabels = r'[A-Za-z]+(?:[A-Za-z0-9]+)?'
+t_Addresses = r'[0-9]+'
 t_Ainstruction = r'\@[A-Za-z0-9]+'
-t_Cinstruction = r'[A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9])?)?\s* '
+t_Cinstruction = r'[A-Za-z0-9]{1,4}\s*(?:[=|;])\s*(?:(?:!|-)?(?:[A-Za-z0-9]))?\s*(?:(?:\||\+|-)?(?:[A-Za-z0-9])?)|;(?:[A-Za-z0-9]{1,4})? '
+#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?([A-Za-z0-9])?)?
 #                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|\(.*?\))?)*
-#|;(?:[A-Za-z0-9]{1,4})|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
-t_ignore = '\t\r\n\f\v\''  # Ignore whitespace
+#|;(?:[A-Za-z0-9]{1,4})?|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
+t_ignore = '\t\r\n\f\v '  # Ignore whitespace
+
 t_COMMENTS = r'//.*'
 def t_error(t):
   print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
@@ -47,7 +50,10 @@ def parse_source_code(source_code):
       labels.append(tok.value[1:-1])  # Remove Parenthesis from label
       print(tok.value)
     elif tok.type == "Ainstruction":
-      Ainstruction.append(tok.value.strip("@"))
+      Ainstruct = (tok.value.strip("@"))
+      if tok.type
+      print(tok.value)
+    elif tok.type == "Cinstruction":
       print(tok.value)
     elif tok.type == "COMMENTS":
       print(tok.value)
@@ -65,6 +71,20 @@ D=M
 AD=D-1
 0;jmp
 @ali
+MD=1
+AMD=!D
+@moham
+MD=A-1
+AMD=D&A
+MD=D|A
+AMD=M-d
+@15
+D=m+d
+MD=-D
+D;JGT
+@R1     //using a label
+d=m
+
 """
 
 print(parse_source_code(source))
