@@ -1,46 +1,32 @@
-"""
-dic = {
-    "dest": "",
-    "cmp": "",
-    "jmp": "",
-    }
-
-
-new = {"dest": "55", "cmp": "23", "jmp":"11"}
-
-dic.update(new)
-dest = dic["dest"]
-print(dic)
-print(dest)
-
-### updating a key of a value ###
-my_dict = {"name": "Alice", "age": 30}
-my_dict["age"] = 31  # Update the value for key "age"
-
-print(my_dict)
-"""
-
-
 from ply import lex
+
+
 
 tokens = (
   "LABEL",
   "Variabels",
-  "Comments",
-  "Ainstruction",
+  "Addresses",
   "Cinstruction",
+  "Ainstruction",
+  "COMMENTS"
 )
 
-t_LABEL = r"\([A-Za-z0-9]+\):"
-t_Ainstruction = r"\@[A-Za-z0-9]+"
-t_Cinstruction = r"\@([A-Za-z0-9]+|\||&|\+|;|=[A-Za-z0-9])"
-t_Variabels = r"[A-Za-z]+"
-t_Comments = r"//.*"
-t_ignore = " \t\n"  # Ignore whitespace
+t_LABEL = r'\([A-Za-z0-9]+\)'
+t_Variabels = r'[A-Za-z]+(?:[A-Za-z0-9]+)?'
+t_Addresses = r'[0-9]+'
+t_Ainstruction = r'\@[A-Za-z0-9]+'
+t_Cinstruction = r'[A-Za-z0-9]{1,4}\s*(?:[=|;])\s*(?:(?:!|-)?(?:[A-Za-z0-9]))?\s*(?:(?:\||\+|-)?(?:[A-Za-z0-9])?)|;(?:[A-Za-z0-9]{1,4})? '
+#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?([A-Za-z0-9])?)?
+#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|\(.*?\))?)*
+#|;(?:[A-Za-z0-9]{1,4})?|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
+t_ignore = '\t\r\n\f\v '  # Ignore whitespace
 
+t_COMMENTS = r'//.*'
 def t_error(t):
   print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
   t.lexer.skip(1)
+
+
 
 def parse_source_code(source_code):
   lexer = lex.lex()
@@ -60,35 +46,20 @@ def parse_source_code(source_code):
   while True:
     tok = lexer.token()
     if not tok:
-      
       break
     if tok.type == "LABEL":
       labels.append(tok.value[1:-1])  # Remove Parenthesis from label
-      print(tok)
+      print(tok.value)
     elif tok.type == "Ainstruction":
-      Ainstruction.append(tok.value.strip("@"))
+      print(tok.value)
     elif tok.type == "Cinstruction":
-      Cinst_dest_rest = (tok.value.split("="))
-      print(Cinst_dest_rest)
+      print(tok.value)
+    elif tok.type == "COMMENTS":
+      print(tok.value)
+    else:
+      continue
+   
 
-      str_Cinst_dest_rest = str(Cinst_dest_rest)
-      Cinst_cm_jm = str_Cinst_dest_rest.split(";")
-      N_Cinstruction["dest"] = Cinst_dest_rest[0]
-      N_Cinstruction["cmp"] = Cinst_cm_jm[0]
-      if Cinst_cm_jm == None:
-        continue
-      else:
-        N_Cinstruction["jmp"]= Cinst_cm_jm[1]
-
-      """
-      
-      dest = Cinst_dest_rest[0]
-      cmp  = Cinst_cm_jm[0]
-      jmp  = Cinst_cm_jm[1]
-      """
-      Cinstruction.update(N_Cinstruction)
-
-  return  Ainstruction, Cinstruction
 
 
 source = """
@@ -99,22 +70,20 @@ D=M
 AD=D-1
 0;jmp
 @ali
+MD=1
+AMD=!D
+@moham
+MD=A-1
+AMD=D&A
+MD=D|A
+AMD=M-d
+@15
+D=m+d
+MD=-D
+D;JGT
+@R1     //using a label
+d=m
+
 """
 
-
-
-
-
-Ainstruction, Cinstruction = parse_source_code(source)
-print(Ainstruction)
-print(Cinstruction)
-"""
-
-labels, Ainstruction, Cinstruction = parse_source_code(source)
-print(labels)
-print(Ainstruction)
-<<<<<<< HEAD
-print(Cinstruction)"""
-
-
-
+print(parse_source_code(source))

@@ -1,20 +1,22 @@
 from ply import lex
+import termcolor
 
 
 
 tokens = (
   "LABEL",
-  "Variabels",
-  "Cinstruction",
-  "Ainstruction",
+  "VARIABLES",
+  "ADDRESSES",
+  "CINSTRUCTION",
+  "AINSTRUCTION",
   "COMMENTS"
 )
 
 t_LABEL = r'\([A-Za-z0-9]+\)'
-t_Variabels = r'[A-Za-z]+(?:[A-Za-z0-9]+)?'
-t_Addresses = r'[0-9]+'
-t_Ainstruction = r'\@[A-Za-z0-9]+'
-t_Cinstruction = r'[A-Za-z0-9]{1,4}\s*(?:[=|;])\s*(?:(?:!|-)?(?:[A-Za-z0-9]))?\s*(?:(?:\||\+|-)?(?:[A-Za-z0-9])?)|;(?:[A-Za-z0-9]{1,4})? '
+t_VARIABLES = r'\@[A-Za-z]+(?:[A-Za-z0-9]+)?'
+t_ADDRESSES = r'\@[0-9]+'
+t_AINSTRUCTION = r'\@[A-Za-z0-9]+'
+t_CINSTRUCTION = r'[A-Za-z0-9]{1,4}\s*(?:[=|;])\s*(?:(?:!|-)?(?:[A-Za-z0-9]+))?\s*(?:(?:\||\+|-)?(?:[A-Za-z0-9])?)|;(?:[A-Za-z0-9]{1,4})? '
 #                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?([A-Za-z0-9])?)?
 #                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|\(.*?\))?)*
 #|;(?:[A-Za-z0-9]{1,4})?|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
@@ -31,6 +33,8 @@ def parse_source_code(source_code):
   lexer = lex.lex()
   lexer.input(source_code)
   labels = []
+  Vars = []
+  Addresses = []
   Ainstruction =[]
   Cinstruction ={
     "dest": "" ,
@@ -49,11 +53,20 @@ def parse_source_code(source_code):
     if tok.type == "LABEL":
       labels.append(tok.value[1:-1])  # Remove Parenthesis from label
       print(tok.value)
-    elif tok.type == "Ainstruction":
-      Ainstruct = (tok.value.strip("@"))
-      if tok.type
-      print(tok.value)
-    elif tok.type == "Cinstruction":
+    elif tok.type == "AINSTRUCTION":
+        print(termcolor.colored("Ains", "green"))
+        print(tok.value)
+        #if  tok.type == "VARIABLES":
+         # print(termcolor.colored("var", "blue"))
+          #Vars.append(tok.value.strip("@"))
+        #elif tok.type == "ADDRESSES":
+         # print(termcolor.colored("ADDRESSES", "red"))
+          #Addresses.append(tok.value.strip("@"))
+        #else:
+         # print(f"there's something wrong with this character {tok.value}")
+
+    elif tok.type == "CINSTRUCTION":
+      print(termcolor.colored("CINSTRUCTION", "magenta"))
       print(tok.value)
     elif tok.type == "COMMENTS":
       print(tok.value)
