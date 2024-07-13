@@ -1,0 +1,70 @@
+from ply import lex
+
+
+
+tokens = (
+  "LABEL",
+  "Variabels",
+  "Cinstruction",
+  "Ainstruction",
+  "COMMENTS"
+)
+
+t_LABEL = r'\([A-Za-z0-9]+\)'
+t_Variabels = r'[A-Za-z]+'
+t_Ainstruction = r'\@[A-Za-z0-9]+'
+t_Cinstruction = r'[A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9])?)?\s* '
+#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|\(.*?\))?)*
+#|;(?:[A-Za-z0-9]{1,4})|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
+t_ignore = '\t\r\n\f\v\''  # Ignore whitespace
+t_COMMENTS = r'//.*'
+def t_error(t):
+  print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
+  t.lexer.skip(1)
+
+
+
+def parse_source_code(source_code):
+  lexer = lex.lex()
+  lexer.input(source_code)
+  labels = []
+  Ainstruction =[]
+  Cinstruction ={
+    "dest": "" ,
+    "cmp" : "" ,
+    "jmp" : "" ,
+  }
+  N_Cinstruction = {
+        "dest": "dest" ,
+        "cmp" : "cmp" ,
+        "jmp" : "jmp" ,
+      }
+  while True:
+    tok = lexer.token()
+    if not tok:
+      break
+    if tok.type == "LABEL":
+      labels.append(tok.value[1:-1])  # Remove Parenthesis from label
+      print(tok.value)
+    elif tok.type == "Ainstruction":
+      Ainstruction.append(tok.value.strip("@"))
+      print(tok.value)
+    elif tok.type == "COMMENTS":
+      print(tok.value)
+    else:
+      continue
+   
+
+
+
+source = """
+//n=2
+@2
+D=M
+(loop)
+AD=D-1
+0;jmp
+@ali
+"""
+
+print(parse_source_code(source))

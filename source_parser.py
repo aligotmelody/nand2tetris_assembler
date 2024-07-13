@@ -1,26 +1,3 @@
-"""
-dic = {
-    "dest": "",
-    "cmp": "",
-    "jmp": "",
-    }
-
-
-new = {"dest": "55", "cmp": "23", "jmp":"11"}
-
-dic.update(new)
-dest = dic["dest"]
-print(dic)
-print(dest)
-
-### updating a key of a value ###
-my_dict = {"name": "Alice", "age": 30}
-my_dict["age"] = 31  # Update the value for key "age"
-
-print(my_dict)
-"""
-
-
 from ply import lex
 
 tokens = (
@@ -52,11 +29,6 @@ def parse_source_code(source_code):
     "cmp" : "" ,
     "jmp" : "" ,
   }
-  N_Cinstruction = {
-        "dest": "dest" ,
-        "cmp" : "cmp" ,
-        "jmp" : "jmp" ,
-      }
   while True:
     tok = lexer.token()
     if not tok:
@@ -70,26 +42,20 @@ def parse_source_code(source_code):
     elif tok.type == "Cinstruction":
       Cinst_dest_rest = (tok.value.split("="))
       print(Cinst_dest_rest)
-
-      str_Cinst_dest_rest = str(Cinst_dest_rest)
-      Cinst_cm_jm = str_Cinst_dest_rest.split(";")
-      N_Cinstruction["dest"] = Cinst_dest_rest[0]
-      N_Cinstruction["cmp"] = Cinst_cm_jm[0]
-      if Cinst_cm_jm == None:
-        continue
-      else:
-        N_Cinstruction["jmp"]= Cinst_cm_jm[1]
-
-      """
-      
+      Cinst_cm_jm = Cinst_dest_rest.split(";")
       dest = Cinst_dest_rest[0]
       cmp  = Cinst_cm_jm[0]
       jmp  = Cinst_cm_jm[1]
-      """
+      N_Cinstruction = {
+        "dest": dest ,
+        "cmp" : cmp ,
+        "jmp" : jmp ,
+      }
       Cinstruction.update(N_Cinstruction)
 
-  return  Ainstruction, Cinstruction
 
+
+  return labels, Ainstruction, Cinstruction
 
 source = """
 //n=2
@@ -103,18 +69,7 @@ AD=D-1
 
 
 
-
-
-Ainstruction, Cinstruction = parse_source_code(source)
-print(Ainstruction)
-print(Cinstruction)
-"""
-
 labels, Ainstruction, Cinstruction = parse_source_code(source)
 print(labels)
 print(Ainstruction)
-<<<<<<< HEAD
-print(Cinstruction)"""
-
-
-
+print(Cinstruction)
