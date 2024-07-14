@@ -7,16 +7,10 @@ first of all do the A instruction
 second of all do the the most common c instruction [AD=D-1]
 
 
-there seems to be an issue with the regex #double check#
-COMMENTS regex IS WORKING
-the Ainstruction regex is working
-the label regex is working
-the Cinstruction is working fine
-
 ###don't forget to separate the Ainstruction into 2 categories Variables and numbers [addresses]
 
 
-##########you need to review the regex according to the colored output######
+
 
 also get to the root of why the commands are breaking to different lines example:
 #the command:
