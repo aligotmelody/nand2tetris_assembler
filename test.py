@@ -1,90 +1,74 @@
 from ply import lex
-import termcolor
-import re
 
-# Helper function to check if the address is numeric
-Ainst_address = re.compile(r'[0-9]+')
-def if_address(Ainstruct):
-    return bool(Ainst_address.match(Ainstruct))
 
-# List of token names
+
 tokens = (
-    "LABEL",
-    "ADDRESSES",
-    "CINSTRUCTION",
-    "AINSTRUCTION",
-    "COMMENTS",
-    "NEWLINE"
+  "LABEL",
+  "Variabels",
+  "Addresses",
+  "Cinstruction",
+  "Ainstruction",
+  "COMMENTS"
 )
 
-# Token definitions
 t_LABEL = r'\([A-Za-z0-9]+\)'
-t_ADDRESSES = r'\@[0-9]+'
-t_AINSTRUCTION = r'\@[A-Za-z0-9]+'
-t_CINSTRUCTION = r'[A-Za-z]{1,3}={0,1}[!&|+-]{0,1}[A-Za-z0-9]+;{0,1}[A-Za-z0-9]*'
+t_Variabels = r'[A-Za-z]+(?:[A-Za-z0-9]+)?'
+t_Addresses = r'[0-9]+'
+t_Ainstruction = r'\@[A-Za-z0-9]+'
+t_Cinstruction = r'(?:(?:[ADM]{1,3})=)?(?:[-!]?[01ADM]+[+\-&|]?[-!]?[01ADM]*)(?:;[A-Z]{3})? '
+#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?([A-Za-z0-9])?)?
+#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|\(.*?\))?)*
+#|;(?:[A-Za-z0-9]{1,4})?|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
+t_ignore = '\t\r\n\f\v '  # Ignore whitespace
 
-# Comments definition
 t_COMMENTS = r'//.*'
-
-# Ignored characters (spaces and tabs)
-t_ignore = ' \t'
-
-# Rule to track line numbers and handle newlines
-def t_NEWLINE(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
-
-# Error handling rule
 def t_error(t):
-    print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
-    t.lexer.skip(1)
+  print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
+  t.lexer.skip(1)
 
-# Build the lexer
-lexer = lex.lex()
+
 
 def parse_source_code(source_code):
-    lexer.input(source_code)
-    labels = []
-    Ainstr_Address = []
-    Ainst_var = []
-    Cinstruction = []
-    
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break
-        if tok.type == "LABEL":
-            labels.append(tok.value[1:-1])  # Remove Parenthesis from label
-            print(tok.value)
-        elif tok.type == "AINSTRUCTION":
-            Ainstruct = (tok.value.strip("@"))
-            print(termcolor.colored("Ains", "green"))
-            print(tok.value)
-            if if_address(Ainstruct):
-                print(termcolor.colored("Address", "blue"))
-                Ainstr_Address.append(tok.value.strip("@"))
-            else:
-                print(f"the command is {tok.value}")
-                Ainst_var.append(tok.value.strip("@"))
-        elif tok.type == "CINSTRUCTION":
-            print(termcolor.colored("CINSTRUCTION", "magenta"))
-            Cinstruction.append(tok.value.strip())
-            print(tok.value)
-        elif tok.type == "COMMENTS":
-            print(tok.value)
-        else:
-            continue
+  lexer = lex.lex()
+  lexer.input(source_code)
+  labels = []
+  Ainstruction =[]
+  Cinstruction ={
+    "dest": "" ,
+    "cmp" : "" ,
+    "jmp" : "" ,
+  }
+  N_Cinstruction = {
+        "dest": "dest" ,
+        "cmp" : "cmp" ,
+        "jmp" : "jmp" ,
+      }
+  while True:
+    tok = lexer.token()
+    if not tok:
+      break
+    if tok.type == "LABEL":
+      labels.append(tok.value[1:-1])  # Remove Parenthesis from label
+      print(tok.value)
+    elif tok.type == "Ainstruction":
+      print(tok.value)
+    elif tok.type == "Cinstruction":
+      print(tok.value)
+    elif tok.type == "COMMENTS":
+      print(tok.value)
+    else:
+      continue
+   
 
-    return labels, Ainst_var, Ainstr_Address, Cinstruction
 
-# Test input
+
 source = """
-// n=2
+//n=2
 @2
 D=M
 (loop)
 AD=D-1
-0;JMP
+0;jmp
 @ali
 MD=1
 AMD=!D
@@ -92,21 +76,14 @@ AMD=!D
 MD=A-1
 AMD=D&A
 MD=D|A
-AMD=M-D
+AMD=M-d
 @15
-D=M+D
+D=m+d
 MD=-D
 D;JGT
-@R1     // using a label
-D=M
-(hello world)
-(my name is ali)
+@R1     //using a label
+d=m
+
 """
 
-
-LAB, VARS, ADDRESSES, CINSTR = parse_source_code(source)
-print("Labels:", LAB)
-print("Variables:", VARS)
-print("Addresses:", ADDRESSES)
-print("C Instructions:", CINSTR)
-print("Number of C Instructions:", len(CINSTR))
+print(parse_source_code(source))

@@ -1,5 +1,5 @@
 from ply import lex
-import termcolor
+
 
 
 
@@ -17,9 +17,6 @@ t_VARIABLES = r'\@[A-Za-z]+(?:[A-Za-z0-9]+)?'
 t_ADDRESSES = r'\@[0-9]+'
 t_AINSTRUCTION = r'\@[A-Za-z0-9]+'
 t_CINSTRUCTION = r'[A-Za-z0-9]{1,4}\s*(?:[=|;])\s*(?:(?:!|-)?(?:[A-Za-z0-9]+))?\s*(?:(?:\||\+|-)?(?:[A-Za-z0-9])?)|;(?:[A-Za-z0-9]{1,4})? '
-#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?([A-Za-z0-9])?)?
-#                  [A-Za-z]{1,4}\s*=\s*(?:(?:!|-)?(?:[A-Za-z0-9]|\(.*?\))?)*
-#|;(?:[A-Za-z0-9]{1,4})?|[A-Za-z]\s*(?:[&\|\+\-])\s*[A-Za-z0-9]'
 t_ignore = '\t\r\n\f\v '  # Ignore whitespace
 
 t_COMMENTS = r'//.*'
@@ -54,7 +51,6 @@ def parse_source_code(source_code):
       labels.append(tok.value[1:-1])  # Remove Parenthesis from label
       print(tok.value)
     elif tok.type == "AINSTRUCTION":
-       # print(termcolor.colored("Ains", "green"))
         print(tok.value)
         #if  tok.type == "VARIABLES":
          # print(termcolor.colored("var", "blue"))

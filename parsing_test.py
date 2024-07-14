@@ -17,7 +17,7 @@ tokens = (
 t_LABEL = r'\((?:[A-Za-z0-9]+\s*(?:[A-Za-z0-9]+)?)*\)'
 t_ADDRESSES = r'\@[0-9]+'
 t_AINSTRUCTION = r'\@(?:[A-Za-z0-9]+)'
-t_CINSTRUCTION = r'[A-Za-z0]{1,3}\s{0,2}(?:[=|;])\s{0,2}(?:(?:!|-)?)\s{0,2}(?:[A-Za-z0-9]{1,4})\s{0,2}(?:(?:\||\+|\-|&)?(?:[A-Za-z0-9])?)|;(?:[A-Za-z0-9]{1,3})? '
+t_CINSTRUCTION = r'[0ADM]{1,3}=|;(?:[01ADM]+(?:[+\-!&|])?(?:[1ADM]{1,3})?)(?:J\w+)? '
 t_ignore = '\t\r\f\v '  # Ignore whitespace
 t_COMMENTS = r'//.*'
 
@@ -33,10 +33,6 @@ def t_error(t):
   print(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
   t.lexer.skip(1)
   
-
-
-
-
 
 def parse_source_code(source_code):
   #lex.lex(debug=0, optimize=False, reflags=re.DOTALL)
@@ -81,12 +77,8 @@ def parse_source_code(source_code):
    
 
 
-with open("ass_test.txt", "r") as F:
-  source = F.read()
-  
 
-
-"""
+source_code = """
 //n=2
 @2
 D=M
@@ -107,14 +99,22 @@ MD=-D
 D;JGT
 @R1     //using a label
 d=m
-(hello world)
-(my name is ali)
-
+(example description to the developer)
 """
+
+
+
+  
+
+
+
 #total labels 3, total vars 3, total Ainst_addre 2, Cinstr 13
-LAB, VARS, ADDRESSES, CINSTR= parse_source_code(source)
+LAB, VARS, ADDRESSES, CINSTR = parse_source_code(source_code)
 print(LAB)
 print(VARS)
 print(ADDRESSES)
 print(CINSTR)
 print(len(CINSTR))
+
+
+

@@ -10,6 +10,12 @@ second of all do the the most common c instruction [AD=D-1]
 ###don't forget to separate the Ainstruction into 2 categories Variables and numbers [addresses]
 
 
+try and see if the commands are coming at one piece if that's the case then no need to see why are they breaking
+starting with 
+#Ainst_Vars
+#labels
+#Ainst_addresses
+#Cinstru
 
 
 also get to the root of why the commands are breaking to different lines example:
@@ -19,3 +25,6 @@ also get to the root of why the commands are breaking to different lines example
 #became:
 -	D
 -	;JGT
+
+
+review and work on the new regex [ on notion ] 
