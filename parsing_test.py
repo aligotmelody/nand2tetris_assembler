@@ -2,6 +2,35 @@ from ply import lex
 import termcolor
 import re
 
+
+
+dest_dict = {
+    'null': '000', 'M': '001', 'D': '010', 'MD': '011',
+    'A': '100', 'AM': '101', 'AD': '110', 'AMD': '111'
+}
+
+
+
+comp_dict = {
+   
+   '0': '0101010', '1': '0111111', '-1':'0111010', 'D':'0001100', 'A': '0110000', '!D': '0001101',
+    '!A': '0110001', '-D': '0001111', '-A': '0110011', 'D+1': '0011111', 'A+1': '0110111',
+    'D-1': '0001110', 'A-1': '0110010', 'D+A': '0000010', 'D-A': '0010011', 'A-D':'0000111',
+    'D&A': '0000000', 'D|A': '0010101', 'M': '1110000', '!M': '1110001', '-M': '1110011',
+    'M+1': '1110111', 'M-1': '1110010', 'D+M': '1000010', 'D-M': '1010011', 'M-D': '1000111',
+    'D&M': '1000000', 'D|M': '1010101'
+            
+            }
+
+
+
+jmp_dict = {
+    'null': '000', 'JGT': '001', 'JEQ': '010', 'JGE': '011',
+    'JLT': '100', 'JNE': '101', 'JLE': '110', 'JMP': '111'
+}
+
+
+
 Ainst_address = re.compile(r'[0-9]+')
 def if_address(Ainstruct):
       return bool(Ainst_address.match(Ainstruct))
@@ -17,7 +46,7 @@ tokens = (
 t_LABEL = r'\((?:[A-Za-z0-9]+\s*(?:[A-Za-z0-9]+)?)*\)'
 t_ADDRESSES = r'\@[0-9]+'
 t_AINSTRUCTION = r'\@(?:[A-Za-z0-9]+)'
-t_CINSTRUCTION = r'[0ADM]{1,3}=|;(?:[01ADM]+(?:[+\-!&|])?(?:[1ADM]{1,3})?)(?:J\w+)? '
+t_CINSTRUCTION = r'(?:[ADM]{1,3}=)?(?:[!ADM]{1})?[\-+&|]{0,1}[01ADM]{1}(?:;J\w+)? '
 t_ignore = '\t\r\f\v '  # Ignore whitespace
 t_COMMENTS = r'//.*'
 
@@ -35,7 +64,7 @@ def t_error(t):
   
 
 def parse_source_code(source_code):
-  #lex.lex(debug=0, optimize=False, reflags=re.DOTALL)
+  lex.lex(debug=0, optimize=False, reflags=re.DOTALL)
   lexer = lex.lex()
   lexer.input(source_code)
   labels = []
@@ -66,7 +95,7 @@ def parse_source_code(source_code):
            Ainst_var.append(tok.value.strip("@"))
     elif tok.type == "CINSTRUCTION":
       print(termcolor.colored("CINSTRUCTION", "magenta"))
-      Cinstruction.append(tok.value.strip("\n"))
+      Cinstruction.
       print(tok.value)
     elif tok.type == "COMMENTS":
       print(tok.value)
@@ -76,15 +105,20 @@ def parse_source_code(source_code):
   return labels, Ainst_var, Ainstr_Address, Cinstruction
    
 
+def assem_2_binary():
+
+with open("ass_test.txt", "r") as F:
+   source_code = F.read()
 
 
-source_code = """
+
+"""
 //n=2
 @2
 D=M
 (loop)
 AD=D-1
-0;jmp
+0;JMP
 @ali
 MD=1
 AMD=!D
@@ -92,13 +126,13 @@ AMD=!D
 MD=A-1
 AMD=D&A
 MD=D|A
-AMD=M-d
+AMD=M-D
 @15
-D=m+d
+D=M+D
 MD=-D
 D;JGT
 @R1     //using a label
-d=m
+D=M
 (example description to the developer)
 """
 
@@ -111,9 +145,10 @@ d=m
 #total labels 3, total vars 3, total Ainst_addre 2, Cinstr 13
 LAB, VARS, ADDRESSES, CINSTR = parse_source_code(source_code)
 print(LAB)
-print(VARS)
+
 print(ADDRESSES)
-print(CINSTR)
+print(len(ADDRESSES))
+
 print(len(CINSTR))
 
 

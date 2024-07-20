@@ -1,30 +1,14 @@
+
+
+
+
+
 next step: figure a way to have each of the c instruction commands have the correct key [dest, comp, jmp]
 
 
 checkpoint
 
-first of all do the A instruction 
-second of all do the the most common c instruction [AD=D-1]
-
-
 ###don't forget to separate the Ainstruction into 2 categories Variables and numbers [addresses]
 
 
-try and see if the commands are coming at one piece if that's the case then no need to see why are they breaking
-starting with 
-#Ainst_Vars
-#labels
-#Ainst_addresses
-#Cinstru
-
-
-also get to the root of why the commands are breaking to different lines example:
-#the command:
--	D;JGT 
-
-#became:
--	D
--	;JGT
-
-
-review and work on the new regex [ on notion ] 
+find a way to handle labels 
