@@ -133,7 +133,7 @@ MD=-D
 D;JGT
 @R1     //using a label
 D=M
-(example description to the developer)
+(example description to the test with)
 """
 
 
